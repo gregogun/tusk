@@ -4,13 +4,13 @@
     "baseUrl": ".",
     "outDir": "dist",
     "paths": {
-      "@components/*": ["components/*"],
-      "@styles/*": ["styles/*"],
-      "@utils/*": ["utils/*"],
-      "@icons/*": ["icons/*"],
-      "@data/*": ["data/*"],
-      "@pages/*": ["pages/*"],
-      "@lib/*": ["lib/*"]
+      "@/components/*": ["components/*"],
+      "@/styles/*": ["styles/*"],
+      "@/utils/*": ["utils/*"],
+      "@/icons/*": ["icons/*"],
+      "@/data/*": ["data/*"],
+      "@/pages/*": ["pages/*"],
+      "@/lib/*": ["lib/*"]
     },
 
     /* Project */

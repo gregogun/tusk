@@ -11,7 +11,6 @@
     "airbnb",
     "airbnb-typescript",
     "plugin:@typescript-eslint/recommended",
-    "plugin:eslint-comments/recommended",
     "plugin:jest/recommended",
     "plugin:promise/recommended",
     "prettier" // Prettier must be last brodie.
@@ -20,26 +19,44 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint", "eslint-comments", "jest", "promise", "import", "prettier"],
+  "plugins": ["@typescript-eslint", "jest", "promise", "import", "prettier"],
   "rules": {
     // I suggest you add at least those two rules:
     "prettier/prettier": [
-      "error",
+      "warn",
       {
         "endOfLine": "auto"
       }
     ],
     "react/prop-types": "off",
-    "@typescript-eslint/no-unused-vars": "error",
+    "react/require-default-props": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/display-name": 0,
+    "react/jsx-props-no-spreading": 0,
+    "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/ban-types": 0,
+    "@typescript-eslint/no-use-before-define": 0,
+    "@typescript-eslint/indent": 0,
+    "@typescript-eslint/member-delimiter-style": 0,
     "import/prefer-default-export": "off",
     "import/no-default-export": "off",
     "no-use-before-define": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-use-before-define": ["error"],
     // It's not accurate in the monorepo style
-    "import/no-extraneous-dependencies": "off"
+    "import/no-extraneous-dependencies": "off",
+    "arrow-body-style": 0,
+    "import/order": 0,
+    "import/extensions": 0,
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": ["Link"],
+        "specialLink": ["hrefLeft", "hrefRight"],
+        "aspects": ["invalidHref", "preferButton"]
+      }
+    ]
   },
   "settings": {
     "import/parsers": {
