@@ -71,6 +71,16 @@ export const button = css({
         padding: '$4 $5',
         minWidth: '160px',
       },
+      fullMd: {
+        fontSize: '1.125rem',
+        padding: '$3 $6',
+        width: '100%',
+      },
+      fullLg: {
+        fontSize: '1.25rem',
+        padding: '$4 $5',
+        width: '100%',
+      },
       icon: {
         padding: '$2 $2',
       },
