@@ -5,6 +5,9 @@ import { Logo } from '@/components/icons/logo';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import Link from 'next/link';
 import { linkButton } from './link';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import { button } from './button';
+import { Box } from './layout';
 
 const LogoLink = ({ children }) => {
   return (
@@ -33,7 +36,9 @@ interface HeaderProps {
 }
 
 export const Header = ({ ...props }: HeaderProps) => {
-  const { children, css } = props;
+  const { data: session, status } = useSession();
+  const { css } = props;
+
   return (
     <header className={header({ css: css })}>
       <LogoLink>
@@ -48,7 +53,45 @@ export const Header = ({ ...props }: HeaderProps) => {
           }}
         />
       </LogoLink>
-      {children}
+      {session ? (
+        <button onClick={() => signOut()} className={button({ variant: 'outline' })}>
+          Sign Out
+        </button>
+      ) : (
+        <Box
+          css={{
+            '@bp1': {
+              display: 'none',
+            },
+            '@bp2': {
+              display: 'block',
+            },
+          }}
+        >
+          <Link href="/dashboard" passHref>
+            <button
+              onClick={() => signIn()}
+              className={button({
+                variant: 'ghost',
+                css: {
+                  mr: '$4',
+                },
+              })}
+            >
+              Log In
+            </button>
+          </Link>
+          <Link href="/demo" passHref>
+            <a
+              className={linkButton({
+                variant: 'brandOutline',
+              })}
+            >
+              Try the demo
+            </a>
+          </Link>
+        </Box>
+      )}
     </header>
   );
 };
