@@ -7,8 +7,9 @@ export const stitchesConfig = createStitches({
     colors: {
       black: blackA.blackA12,
       white: whiteA.whiteA12,
-      accent: grayDark.gray3,
+      accent: grayDark.gray1,
       gray: grayDark.gray7,
+      lightGray: grayDark.gray10,
       gradient: 'linear-gradient(0deg, #f77062 0%, #fe5196 100%)',
     },
     fonts: {
@@ -163,7 +164,6 @@ export const globalStyles = stitchesConfig.globalCss({
   '*:focus': {
     outline: '2px solid $white',
     outlineOffset: '2px',
-    transitionDelay: 'unset',
   },
   svg: { display: 'inline-block', verticalAlign: 'middle' },
   ul: {
