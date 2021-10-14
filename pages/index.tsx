@@ -1,15 +1,15 @@
 // index.tsx
-import React from 'react';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import React, { useEffect } from 'react';
 import { css } from '../stitches.config';
 import Link from 'next/link';
 import { button } from '@/components/button';
-import { linkButton } from '@/components/link';
 import { text } from '@/components/text';
 import Image from 'next/image';
 import { Container } from '@/components/container';
 import { Header } from '@/components/header';
 import { Box, Flex, Main } from '@/components/layout';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const strikethrough = css({ textDecoration: 'line-through' });
 
@@ -36,6 +36,26 @@ const BackgroundImage = () => {
 };
 
 export default function Home() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  if (status === 'loading') {
+    return (
+      <Container title="Tusk">
+        <Header
+          css={{
+            mb: '$9',
+          }}
+        />
+        <h1>loading...</h1>
+      </Container>
+    );
+  }
+
+  if (session) {
+    router.push('/app');
+  }
+
   return (
     <>
       <BackgroundImage />
@@ -44,40 +64,7 @@ export default function Home() {
           css={{
             mb: '$9',
           }}
-        >
-          <Box
-            css={{
-              '@bp1': {
-                display: 'none',
-              },
-              '@bp2': {
-                display: 'block',
-              },
-            }}
-          >
-            <Link href="/dashboard" passHref>
-              <a
-                className={linkButton({
-                  variant: 'ghost',
-                  css: {
-                    mr: '$4',
-                  },
-                })}
-              >
-                Log In
-              </a>
-            </Link>
-            <Link href="/demo" passHref>
-              <a
-                className={linkButton({
-                  variant: 'brandOutline',
-                })}
-              >
-                Try the demo
-              </a>
-            </Link>
-          </Box>
-        </Header>
+        />
         <Main>
           <Box
             css={{
