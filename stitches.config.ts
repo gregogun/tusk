@@ -9,6 +9,7 @@ export const stitchesConfig = createStitches({
       white: whiteA.whiteA12,
       accent: grayDark.gray1,
       gray: grayDark.gray7,
+      darkGray: grayDark.gray3,
       lightGray: grayDark.gray10,
       gradient: 'linear-gradient(0deg, #f77062 0%, #fe5196 100%)',
     },
