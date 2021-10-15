@@ -37,7 +37,6 @@ export async function getCollection(id: number): Promise<Collection> {
       },
     })
     .catch((error) => error);
-  //console.log(collection);
 
   return collection;
 }
@@ -53,7 +52,6 @@ export async function createCollection(payload: CollectionPayload) {
     .create({
       data: {
         name: name,
-        // userId: id,
         user: {
           connect: {
             id: id,
@@ -66,15 +64,59 @@ export async function createCollection(payload: CollectionPayload) {
   return newCollection;
 }
 
-export async function getTodos(id: string): Promise<Todo[]> {
+export async function getTodos(id: number): Promise<Todo[]> {
   const todos = await prisma.todo
     .findMany({
       where: {
-        collectionId: Number(id),
+        collectionId: id,
       },
     })
     .catch((error) => error);
   console.log(todos);
 
   return todos;
+}
+
+export async function getTodo(id: number) {
+  const todo = await prisma.todo
+    .findUnique({
+      where: {
+        id: id,
+      },
+    })
+    .catch((error) => error);
+
+  return todo;
+}
+
+export interface CreateTodoPayload {
+  name: string;
+  id: number;
+  userId: number;
+}
+
+export async function createTodo({ name, id, userId }: CreateTodoPayload) {
+  const createTodo = await prisma.todo
+    .create({
+      data: {
+        name: name,
+        collection: {
+          connectOrCreate: {
+            create: {
+              name: name,
+              userId: userId,
+            },
+            where: {
+              id: id,
+            },
+          },
+        },
+      },
+      include: {
+        collection: true,
+      },
+    })
+    .catch((error) => error);
+
+  return createTodo;
 }

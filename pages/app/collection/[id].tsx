@@ -1,3 +1,4 @@
+/* eslint-disable promise/always-return */
 import React, { useEffect, useState } from 'react';
 import { Container } from '@/components/container';
 import { Header } from '@/components/header';
@@ -13,20 +14,54 @@ import { Trash } from '@/components/icons/trash';
 import { useRouter } from 'next/router';
 import { Collection, Todo } from '.prisma/client';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { getSession } from 'next-auth/react';
-import { getCollection, getCollections, getTodos } from '@/lib/prisma';
+import { getSession, useSession } from 'next-auth/react';
+import { CreateTodoPayload, getCollection, getCollections, getTodos } from '@/lib/prisma';
 import { Params } from 'next/dist/server/router';
 import { server } from 'config';
 
 // <-----------------------------Add Task----------------------------->
 
-const AddTask = () => {
-  const [task, setTask] = useState<string>('');
+interface AddTaskProps {
+  collection: Collection;
+  updateTodoList: React.Dispatch<React.SetStateAction<Todo[]>>;
+  fetchTodos: (id: number) => Promise<void>;
+}
+
+const AddTask = ({ collection, updateTodoList, fetchTodos }: AddTaskProps) => {
+  const [taskName, setTaskName] = useState<string>('');
   // const [userError, setUserError] = useState(false);
+  const { data: session } = useSession();
 
   async function handleCreateTodo(e) {
     e.preventDefault();
-    //
+
+    const payload: CreateTodoPayload = {
+      name: taskName,
+      id: collection.id,
+      userId: session.userId,
+    };
+
+    if (taskName !== '') {
+      const res = await fetch('/api/todo', {
+        body: JSON.stringify({
+          payload: payload,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      });
+
+      setTaskName('');
+
+      const { error } = await res.json();
+      if (error) {
+        console.log('replace with toast alert', error);
+        return;
+      }
+
+      fetchTodos(collection.id);
+    }
   }
 
   return (
@@ -61,8 +96,9 @@ const AddTask = () => {
         </label>
         <Input
           css={{ width: '100%' }}
-          defaultValue={task}
-          onChange={(e) => setTask(e.target.value)}
+          // defaultValue={taskName}
+          value={taskName}
+          onChange={(e) => setTaskName(e.target.value)}
           variant="text"
           type="text"
           name="task"
@@ -97,7 +133,7 @@ const Task = ({ complete, setComplete, todo }: TaskProps) => {
         position: 'relative',
         padding: '$3',
         borderRadius: '$md',
-        boxShadow: '0 0 0 2px $colors$accent',
+        boxShadow: '0 0 0 2px $colors$gray',
         gap: '$4',
         mb: '$4',
 
@@ -118,16 +154,14 @@ const Task = ({ complete, setComplete, todo }: TaskProps) => {
           <h3 className={text({ size: 'md' })}>{todo.name}</h3>
         </Flex>
         <button
+          aria-label="Delete Task"
           onClick={handleDeleteTodo}
           className={button({
             variant: 'ghost',
             size: 'icon',
-            css: {
-              boxSize: '$md',
-            },
           })}
         >
-          <Trash />
+          <Trash css={{ boxSize: '$lg' }} />
         </button>
       </Flex>
     </ListItem>
@@ -135,17 +169,17 @@ const Task = ({ complete, setComplete, todo }: TaskProps) => {
 };
 
 interface TaskListProps {
-  todos: Todo[];
+  todoList: Todo[];
   complete: boolean;
   setComplete: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TaskList = ({ complete, setComplete, todos }: TaskListProps) => {
+const TaskList = ({ complete, setComplete, todoList }: TaskListProps) => {
   return (
     <ul>
-      {todos?.map((todo) => (
-        <Task key={todo.id} todo={todo} complete={complete} setComplete={setComplete} />
-      ))}
+      {todoList
+        ?.map((todo) => <Task key={todo.id} todo={todo} complete={complete} setComplete={setComplete} />)
+        .reverse()}
     </ul>
   );
 };
@@ -158,16 +192,27 @@ interface CollectionProps {
 }
 
 export default function TodoCollection({ todos, collection }: CollectionProps) {
-  // const [todoList, updateTodoList] = useState<Todo[] | null>([]);
+  const [todoList, updateTodoList] = useState<Todo[] | null>([]);
   const [complete, setComplete] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
-    console.log(todos, collection);
+    fetchTodos(collection.id);
   }, []);
 
-  async function fetchTodos() {
-    //
+  async function fetchTodos(id: number) {
+    const response = await fetch('/api/todos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(id),
+    });
+
+    const data = await response.json();
+
+    console.log(data.todos);
+
+    updateTodoList(data.todos);
   }
 
   return (
@@ -185,43 +230,17 @@ export default function TodoCollection({ todos, collection }: CollectionProps) {
         }}
       >
         <h1 className={text({ size: 'xl', css: { mb: '$4' } })}>Tasks - {todos.length}</h1>
-        <AddTask />
-        <TaskList todos={todos} complete={complete} setComplete={setComplete} />
+        <AddTask collection={collection} updateTodoList={updateTodoList} fetchTodos={fetchTodos} />
+        <TaskList todoList={todoList} complete={complete} setComplete={setComplete} />
       </Main>
     </Container>
   );
 }
 
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   const response = await fetch(`${server}/api/collection/getMany`, {
-//     method: 'GET',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//   }).catch((error) => {
-//     console.log(error);
-//   });
-
-//   //console.log(response);
-
-//   const collections = await response.json();
-
-//   return {
-//     paths: collections.map((collection) => ({
-//       params: {
-//         id: collection.id.toString(),
-//       },
-//     })),
-//     fallback: true,
-//   };
-// };
-
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const id = context.params.id as string;
-  const todos = await getTodos(id);
+  const todos = await getTodos(Number(id));
   const collection = await getCollection(Number(id));
-  console.log(context);
-  // console.log(todos);
 
   return {
     props: {
