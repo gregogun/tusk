@@ -72,7 +72,7 @@ export async function getTodos(id: number): Promise<Todo[]> {
       },
     })
     .catch((error) => error);
-  console.log(todos);
+  //console.log(todos);
 
   return todos;
 }
@@ -117,6 +117,18 @@ export async function createTodo({ name, id, userId }: CreateTodoPayload) {
       },
     })
     .catch((error) => error);
-
+  console.log(createTodo);
   return createTodo;
+}
+
+export async function deleteTodo(id: number) {
+  const deleteTodo = await prisma.todo
+    .delete({
+      where: {
+        id: id,
+      },
+    })
+    .catch((error) => error);
+  console.log(deleteTodo);
+  return deleteTodo;
 }

@@ -11,14 +11,10 @@ import { Input } from '@/components/input';
 import { styled } from 'stitches.config';
 import { Checkbox } from '@/components/checkbox';
 import { Trash } from '@/components/icons/trash';
-import { useRouter } from 'next/router';
 import { Collection, Todo } from '.prisma/client';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { getSession, useSession } from 'next-auth/react';
-import { CreateTodoPayload, getCollection, getCollections, getTodos } from '@/lib/prisma';
-import { Params } from 'next/dist/server/router';
-import { server } from 'config';
-
+import { useSession } from 'next-auth/react';
+import { CreateTodoPayload, getCollection, getTodos } from '@/lib/prisma';
 // <-----------------------------Add Task----------------------------->
 
 interface AddTaskProps {
@@ -114,71 +110,79 @@ const AddTask = ({ collection, updateTodoList, fetchTodos }: AddTaskProps) => {
 
 const ListItem = styled('li', {});
 
-interface TaskProps {
-  todo: Todo;
-  complete: boolean;
-  setComplete: React.Dispatch<React.SetStateAction<boolean>>;
+interface TaskListProps {
+  collection: Collection;
+  todoList: Todo[];
+  fetchTodos: (id: number) => Promise<void>;
 }
 
-const Task = ({ complete, setComplete, todo }: TaskProps) => {
-  async function handleDeleteTodo(): Promise<void> {
-    //
+const TaskList = ({ collection, todoList, fetchTodos }: TaskListProps) => {
+  async function handleDeleteTodo(id: number): Promise<void> {
+    const res = await fetch('/api/todo', {
+      body: JSON.stringify({
+        id: id,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'DELETE',
+    });
+
+    const { error } = await res.json();
+    if (error) {
+      console.log('replace this with toast', error);
+      return;
+    }
+
+    console.log('replace with toast - successfuly deleted task!');
+    fetchTodos(collection.id);
   }
 
   return (
-    <ListItem
-      css={{
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        padding: '$3',
-        borderRadius: '$md',
-        boxShadow: '0 0 0 2px $colors$gray',
-        gap: '$4',
-        mb: '$4',
-
-        '&:focus-within': {
-          boxShadow: '0 0 0 2px $colors$gray',
-        },
-      }}
-    >
-      <Flex
-        css={{
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        <Flex css={{ alignItems: 'center' }}>
-          <Checkbox completed={todo.completed} id={todo.id} complete={complete} setComplete={setComplete} />
-          <h3 className={text({ size: 'md' })}>{todo.name}</h3>
-        </Flex>
-        <button
-          aria-label="Delete Task"
-          onClick={handleDeleteTodo}
-          className={button({
-            variant: 'ghost',
-            size: 'icon',
-          })}
-        >
-          <Trash css={{ boxSize: '$lg' }} />
-        </button>
-      </Flex>
-    </ListItem>
-  );
-};
-
-interface TaskListProps {
-  todoList: Todo[];
-  complete: boolean;
-  setComplete: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const TaskList = ({ complete, setComplete, todoList }: TaskListProps) => {
-  return (
     <ul>
       {todoList
-        ?.map((todo) => <Task key={todo.id} todo={todo} complete={complete} setComplete={setComplete} />)
+        ?.map((todo) => (
+          <ListItem
+            key={todo.id}
+            css={{
+              display: 'flex',
+              alignItems: 'center',
+              position: 'relative',
+              padding: '$3',
+              borderRadius: '$md',
+              boxShadow: '0 0 0 2px $colors$gray',
+              gap: '$4',
+              mb: '$4',
+
+              '&:focus-within': {
+                boxShadow: '0 0 0 2px $colors$gray',
+              },
+            }}
+          >
+            <Flex
+              css={{
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <Flex css={{ alignItems: 'center' }}>
+                <Checkbox completed={todo.completed} id={todo.id} />
+                <h3 className={text({ size: 'md' })}>{todo.name}</h3>
+              </Flex>
+              <button
+                aria-label="Delete Task"
+                onClick={() => handleDeleteTodo(todo.id)}
+                className={button({
+                  variant: 'ghost',
+                  size: 'icon',
+                })}
+              >
+                <Trash css={{ boxSize: '$lg' }} />
+              </button>
+            </Flex>
+          </ListItem>
+        ))
         .reverse()}
     </ul>
   );
@@ -193,13 +197,12 @@ interface CollectionProps {
 
 export default function TodoCollection({ todos, collection }: CollectionProps) {
   const [todoList, updateTodoList] = useState<Todo[] | null>([]);
-  const [complete, setComplete] = useState(false);
 
   useEffect(() => {
     fetchTodos(collection.id);
   }, []);
 
-  async function fetchTodos(id: number) {
+  async function fetchTodos(id: number): Promise<void> {
     const response = await fetch('/api/todos', {
       method: 'POST',
       headers: {
@@ -231,7 +234,7 @@ export default function TodoCollection({ todos, collection }: CollectionProps) {
       >
         <h1 className={text({ size: 'xl', css: { mb: '$4' } })}>Tasks - {todos.length}</h1>
         <AddTask collection={collection} updateTodoList={updateTodoList} fetchTodos={fetchTodos} />
-        <TaskList todoList={todoList} complete={complete} setComplete={setComplete} />
+        <TaskList collection={collection} todoList={todoList} fetchTodos={fetchTodos} />
       </Main>
     </Container>
   );
