@@ -16,7 +16,7 @@ export const EllipsisVertical = ({ ...props }: IconProps) => {
     >
       <path
         d="M12 15a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zm0 7.5a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zm0-15A2.25 2.25 0 1012 3a2.25 2.25 0 000 4.5z"
-        fill="var(--colors-gray)"
+        fill="currentColor"
       />
     </svg>
   );

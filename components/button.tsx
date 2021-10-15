@@ -1,12 +1,11 @@
-import { css } from 'stitches.config';
+import { css, styled } from 'stitches.config';
 
 export const button = css({
   // resets
   cursor: 'pointer',
   background: 'transparent',
   border: 0,
-  borderRadius: '10px',
-  transitionDuration: '300ms',
+  transitionDuration: '500ms',
   color: '$white',
   textDecoration: 'none',
 
@@ -14,15 +13,21 @@ export const button = css({
     variant: {
       solid: {
         backgroundColor: '$gray',
+        borderRadius: '10px',
         '&:hover': {
           backgroundColor: '$accent',
         },
       },
       brandSolid: {
+        borderRadius: '10px',
         backgroundColor: '$gradient',
       },
       outline: {
+        borderRadius: '10px',
         boxShadow: '0 0 0 1px var(--colors-gray)',
+        '&:hover': {
+          boxShadow: '0 0 0 1px var(--colors-lightGray)',
+        },
       },
       brandOutline: {
         // locally scoped tokens
@@ -49,7 +54,7 @@ export const button = css({
         },
 
         '&:hover': {
-          backgroundColor: '#232323',
+          backgroundColor: '#191919',
         },
       },
       ghost: {
@@ -59,6 +64,9 @@ export const button = css({
         '&:hover': {
           boxShadow: '0 0 0 1px $colors$gray',
         },
+      },
+      unstyled: {
+        padding: 0,
       },
     },
     size: {
@@ -82,6 +90,7 @@ export const button = css({
         width: '100%',
       },
       icon: {
+        borderRadius: '10px',
         padding: '$2 $2',
       },
     },
@@ -91,4 +100,8 @@ export const button = css({
     size: 'md',
     variant: 'solid',
   },
+});
+
+export const Button = styled('button', {
+  ...button,
 });
