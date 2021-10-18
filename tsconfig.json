@@ -21,13 +21,13 @@
     /* Imports */
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
 
     /* Additional */
-    "strict": false,
+    "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
     "jsx": "preserve"

@@ -3,24 +3,23 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const session = await getSession({ req });
+  const { id } = req.query;
 
-  if (!session) {
-    return res.status(401).json({ message: 'User is unauthorized' });
+  if (!id) {
+    return res.status(400).json({ message: 'No ID sent in request' });
   }
 
+  const collectionId = id as string;
+
   try {
-    const collections = await prisma.collection
+    const todos = await prisma.todo
       .findMany({
         where: {
-          userId: session.userId,
-        },
-        include: {
-          todos: true,
+          collectionId: collectionId,
         },
       })
       .catch((error) => error);
-    res.status(200).json({ collections });
+    res.status(200).json({ todos });
   } catch (error) {
     res.status(500).json({ error: error.message || error.toString() });
   }

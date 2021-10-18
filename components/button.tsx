@@ -5,7 +5,7 @@ export const button = css({
   cursor: 'pointer',
   background: 'transparent',
   border: 0,
-  transitionDuration: '500ms',
+  // transitionDuration: '500ms',
   color: '$white',
   textDecoration: 'none',
 
@@ -15,7 +15,7 @@ export const button = css({
         backgroundColor: '$gray',
         borderRadius: '10px',
         '&:hover': {
-          backgroundColor: '$accent',
+          backgroundColor: '$darkGray',
         },
       },
       brandSolid: {
@@ -58,6 +58,7 @@ export const button = css({
         },
       },
       ghost: {
+        borderRadius: '10px',
         background: 'transparent',
         border: 0,
 
@@ -67,6 +68,9 @@ export const button = css({
       },
       unstyled: {
         padding: 0,
+      },
+      inherit: {
+        all: 'inherit',
       },
     },
     size: {
@@ -92,6 +96,10 @@ export const button = css({
       icon: {
         borderRadius: '10px',
         padding: '$2 $2',
+
+        '&:hover': {
+          backgroundColor: '$darkGray',
+        },
       },
     },
   },

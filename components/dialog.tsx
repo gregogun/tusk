@@ -37,7 +37,7 @@ function Root({ children, ...props }) {
 }
 
 const StyledContent = styled(DialogPrimitive.Content, {
-  backgroundColor: '$accent',
+  backgroundColor: '$darkGray',
   color: '$white',
   borderRadius: '$md',
   boxShadow: 'hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px',
@@ -60,28 +60,17 @@ const StyledTitle = styled(DialogPrimitive.Title, {
   margin: 0,
   fontWeight: 500,
   color: '$white',
-  fontSize: 17,
+  fontSize: '1.5rem',
 });
 
 const StyledDescription = styled(DialogPrimitive.Description, {
   margin: '10px 0 20px',
   color: '$lightGray',
-  fontSize: 15,
+  fontSize: '1.125rem',
   lineHeight: 1.5,
 });
 
-// Exports
-const DialogWrapper = Root;
-const DialogTrigger = DialogPrimitive.Trigger;
-const DialogContent = StyledContent;
-const DialogTitle = StyledTitle;
-const DialogDescription = StyledDescription;
-const DialogClose = DialogPrimitive.Close;
-
-// Your app...
-const Flex = styled('div', { display: 'flex' });
-
-const Fieldset = styled('fieldset', {
+export const DialogFieldset = styled('fieldset', {
   all: 'unset',
   display: 'flex',
   gap: 20,
@@ -89,11 +78,11 @@ const Fieldset = styled('fieldset', {
   marginBottom: 15,
 });
 
-const Label = styled('label', {
+export const DialogLabel = styled('label', {
   ...text,
 });
 
-const Input = styled('input', {
+export const DialogInput = styled('input', {
   all: 'unset',
   width: '100%',
   flex: '1',
@@ -101,8 +90,8 @@ const Input = styled('input', {
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: 4,
-  padding: '0 10px',
-  fontSize: 15,
+  padding: '$2',
+  fontSize: '1rem',
   lineHeight: 1,
   color: '$white',
   boxShadow: `0 0 0 1px $colors$white`,
@@ -111,72 +100,10 @@ const Input = styled('input', {
   '&:focus': { boxShadow: `0 0 0 2px $colors$white` },
 });
 
-interface DialogProps {
-  collections: Collection[];
-  handleClick: () => Promise<void>;
-  setCollectionName: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export const Dialog = ({ collections, setCollectionName, handleClick }: DialogProps) => (
-  <DialogWrapper>
-    <DialogTrigger asChild>
-      <button
-        className={button({
-          variant: 'brandOutline',
-          size: collections ? 'fullLg' : 'lg',
-          css: { m: 'auto', display: 'block' },
-        })}
-      >
-        Add {collections ? `a` : `your first`} collection
-      </button>
-    </DialogTrigger>
-    <DialogContent>
-      <DialogTitle asChild>
-        <h2 className={text({ size: 'xl' })}>Add a collection</h2>
-      </DialogTitle>
-      <DialogDescription asChild>
-        <p className={text({ size: 'md' })}>Create a collection to give better context to your tasks.</p>
-      </DialogDescription>
-      <Fieldset>
-        <Label htmlFor="collection">Name</Label>
-        <Input onChange={(e) => setCollectionName(e.target.value)} id="collection" placeholder="My Collection" />
-      </Fieldset>
-      <Flex css={{ marginTop: 25, justifyContent: 'flex-end' }}>
-        <DialogClose asChild>
-          <button
-            aria-label="Close"
-            onClick={handleClick}
-            className={button({ variant: 'brandOutline', size: 'md', css: { mr: '$4' } })}
-          >
-            Create
-          </button>
-        </DialogClose>
-        <DialogClose asChild>
-          <button aria-label="Close" className={button({ variant: 'outline', size: 'md', css: {} })}>
-            Cancel
-          </button>
-        </DialogClose>
-      </Flex>
-      <DialogClose asChild>
-        <button
-          className={button({
-            size: 'icon',
-            css: {
-              position: 'absolute',
-              top: 20,
-              right: 20,
-            },
-          })}
-        >
-          <Cross2Icon
-            className={svg({
-              css: {
-                boxSize: '$lg',
-              },
-            })}
-          />
-        </button>
-      </DialogClose>
-    </DialogContent>
-  </DialogWrapper>
-);
+// Exports
+export const DialogWrapper = DialogPrimitive.Root;
+export const DialogTrigger = DialogPrimitive.Trigger;
+export const DialogContent = StyledContent;
+export const DialogTitle = StyledTitle;
+export const DialogDescription = StyledDescription;
+export const DialogClose = DialogPrimitive.Close;

@@ -162,10 +162,10 @@ export const globalStyles = stitchesConfig.globalCss({
     backgroundColor: '$white',
     color: '$black',
   },
-  '*:focus': {
-    // outline: '2px solid $white',
-    // outlineOffset: '2px',
-  },
+  // '*:focus': {
+  //   outline: '2px solid $white',
+  //   outlineOffset: '2px',
+  // },
   svg: { display: 'inline-block', verticalAlign: 'middle' },
   ul: {
     listStyle: 'none',

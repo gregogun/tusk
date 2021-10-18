@@ -2,15 +2,14 @@ import Head from 'next/head';
 import { CSS, styled } from 'stitches.config';
 
 const Wrapper = styled('div', {
-  '@bp1': {
-    padding: '$4',
-  },
-  '@bp2': {
-    padding: '$6',
-  },
+  // '@bp1': {
+  //   padding: '$4',
+  // },
+  // '@bp2': {
+  //   padding: '$4 $8',
+  // },
   margin: '0 auto',
   width: '100%',
-  maxWidth: '1024px',
   position: 'relative',
 });
 

@@ -39,18 +39,21 @@ export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  if (status === 'loading') {
-    return (
-      <Container title="Tusk">
-        <Header
-          css={{
-            mb: '$9',
-          }}
-        />
-        <h1>loading...</h1>
-      </Container>
-    );
-  }
+  // When rendering client side don't display anything until loading is complete
+  if (typeof window !== 'undefined' && status === 'loading') return null;
+
+  // if (status === 'loading') {
+  //   return (
+  //     <Container title="Tusk">
+  //       <Header
+  //         css={{
+  //           mb: '$9',
+  //         }}
+  //       />
+  //       <h1>loading...</h1>
+  //     </Container>
+  //   );
+  // }
 
   if (session) {
     router.push('/app');
@@ -60,11 +63,7 @@ export default function Home() {
     <>
       <BackgroundImage />
       <Container title="Tusk">
-        <Header
-          css={{
-            mb: '$9',
-          }}
-        />
+        <Header />
         <Main>
           <Box
             css={{

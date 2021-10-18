@@ -17,7 +17,7 @@ export const textBaseSizes = {
     fontSize: '1.5rem',
   },
   '2xl': {
-    fontSize: '2.25rem',
+    fontSize: '2rem',
   },
   '3xl': {
     fontSize: '2.5rem',
