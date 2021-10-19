@@ -27,7 +27,7 @@
     "isolatedModules": true,
 
     /* Additional */
-    "strict": true,
+    "strict": false,
     "noEmit": true,
     "esModuleInterop": true,
     "jsx": "preserve"
