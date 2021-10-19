@@ -1,5 +1,5 @@
 // src/add.test.ts
-import add from 'components/add';
+import add from './add';
 
 describe('add tests', () => {
   it('should return 3', () => {

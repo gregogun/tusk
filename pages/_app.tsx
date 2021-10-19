@@ -1,14 +1,12 @@
-// _app.tsx
-import '@styles/globals.css';
-
-import React, { FC } from 'react';
-import { AppProps } from 'next/app';
+import React from 'react';
 import { SessionProvider } from 'next-auth/react';
+import { IdProvider } from '@radix-ui/react-id';
 
-const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => (
+const MyApp = ({ Component, pageProps }) => (
   <SessionProvider session={pageProps.session}>
-    {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-    <Component {...pageProps} />
+    <IdProvider>
+      <Component {...pageProps} />
+    </IdProvider>
   </SessionProvider>
 );
 export default MyApp;
