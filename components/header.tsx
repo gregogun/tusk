@@ -93,9 +93,8 @@ export const Header = ({ ...props }: HeaderProps) => {
               },
             }}
           >
-            <Link href="/dashboard" passHref>
-              <button
-                onClick={() => signIn()}
+            <Link href="/login" passHref>
+              <a
                 className={button({
                   variant: 'ghost',
                   css: {
@@ -104,7 +103,7 @@ export const Header = ({ ...props }: HeaderProps) => {
                 })}
               >
                 Log In
-              </button>
+              </a>
             </Link>
             <Link href="/demo" passHref>
               <a
