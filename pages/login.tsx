@@ -16,6 +16,7 @@ const Login: FC = () => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
+    console.log(providers);
     const setTheProviders = async () => {
       const setupProviders = await getProviders();
       setproviders(setupProviders);
