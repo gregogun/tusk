@@ -55,7 +55,7 @@ export default function Home() {
   //   );
   // }
 
-  if (session) {
+  if (session && status !== 'loading') {
     router.push('/app');
   }
 
@@ -63,7 +63,11 @@ export default function Home() {
     <>
       <BackgroundImage />
       <Container title="Tusk">
-        <Header />
+        <Header
+          css={{
+            width: '100%',
+          }}
+        />
         <Main>
           <Box
             css={{
@@ -115,7 +119,7 @@ export default function Home() {
                 justifyContent: 'center',
               }}
             >
-              <Link href="/dashboard" passHref>
+              <Link href="/login" passHref>
                 <a
                   className={button({
                     variant: 'brandOutline',
