@@ -17,6 +17,9 @@ const Login: FC = () => {
 
   useEffect(() => {
     console.log(providers);
+    if (providers) {
+      console.log(providers);
+    }
     const setTheProviders = async () => {
       const setupProviders = await getProviders();
       setproviders(setupProviders);
