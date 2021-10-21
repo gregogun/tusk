@@ -1,41 +1,57 @@
 /* eslint-disable no-param-reassign */
-import NextAuth, { NextAuthOptions } from 'next-auth';
+import NextAuth, { Account, NextAuthOptions, User } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
+import TwitterProvider from 'next-auth/providers/twitter';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import { NextApiHandler } from 'next';
 import { getSession } from 'next-auth/react';
+import { JWT } from 'next-auth/jwt';
+import { redirect } from 'next/dist/server/api-utils';
+import { server } from 'config';
 
-const options = {
+const options: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
     }),
+    TwitterProvider({
+      clientId: process.env.TWITTER_ID,
+      clientSecret: process.env.TWITTER_SECRET,
+    }),
   ],
-  // cookies: {
-  //   secure: process.env.NODE_ENV && process.env.NODE_ENV === 'production',
-  // },
   session: {
     jwt: true,
     maxAge: 30 * 24 * 60 * 60,
   },
   callbacks: {
-    async session({ session, token, user }) {
-      session.userId = token.uid;
-      //console.log(session);
-      return Promise.resolve(session);
-    },
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token, user, account }) {
+      if (account?.accessToken) {
+        token.accessToken = account.accessToken;
+      }
       if (user) {
         token.uid = user.id;
       }
-      //console.log(token);
       return Promise.resolve(token);
     },
+    async redirect({ url, baseUrl }) {
+      baseUrl = server;
+      url = `${server}/app`;
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
+    async session({ session, token, user }) {
+      if (token) {
+        session.userId = token.uid as number;
+      }
+      return Promise.resolve(session);
+    },
   },
-  // database: process.env.DATABASE_URL,
+  jwt: {
+    secret: process.env.SECRET,
+    encryption: true,
+  },
 };
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
