@@ -1,7 +1,6 @@
 import prisma from '@/lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import { withSentry } from '@sentry/nextjs';
 
 async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   return new Promise(async (resolve) => {
@@ -125,4 +124,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
   });
 }
 
-export default withSentry(handler);
+export default handler;
