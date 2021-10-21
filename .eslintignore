@@ -1,7 +1,5 @@
 node_modules
 coverage
 .next
-jest.config.js 
-next.config.js
-sentry.client.config.js
-sentry.server.config.js
+*.config.js
+_error.js
