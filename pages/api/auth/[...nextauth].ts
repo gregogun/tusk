@@ -34,7 +34,7 @@ const options: NextAuthOptions = {
       if (user) {
         token.uid = user.id;
       }
-      return Promise.resolve(token);
+      return token;
     },
     async redirect({ url, baseUrl }) {
       baseUrl = server;
