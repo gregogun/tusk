@@ -1,8 +1,9 @@
 import prisma from '@/lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
+import { withSentry } from '@sentry/nextjs';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   return new Promise(async (resolve) => {
     const { method } = req;
     const id = req.query.id as string;
@@ -113,3 +114,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     resolve();
   });
 }
+
+export default withSentry(handler);
