@@ -52,6 +52,7 @@ const options: NextAuthOptions = {
     secret: process.env.SECRET,
     encryption: true,
   },
+  debug: true,
 };
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
