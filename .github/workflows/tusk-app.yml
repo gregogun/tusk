@@ -7,7 +7,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' # Only deploy main
     steps:
       - uses: actions/checkout@v2
-      - run: npm ci
+      - run: rm -rf node_modules && yarn install --frozen-lockfile
       - name: Run production migration
         run: npm run migrate:deploy
         env:
