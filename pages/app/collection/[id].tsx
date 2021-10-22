@@ -53,6 +53,7 @@ import {
 import { CheckIcon, ChevronLeftIcon, Cross2Icon, DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { svg } from '@/styles/svg';
 import Link from 'next/link';
+import useToast from '@/utils/hooks/useToast';
 
 // <-----------------------------Add Task----------------------------->
 
@@ -63,7 +64,7 @@ interface AddTaskProps {
 
 const AddTask = ({ session, collection }: AddTaskProps) => {
   const [taskName, setTaskName] = useState<string>('');
-  const { mutate } = useSWRConfig();
+  const { notify } = useToast();
 
   async function handleCreateTodo(e) {
     e.preventDefault();
@@ -82,10 +83,10 @@ const AddTask = ({ session, collection }: AddTaskProps) => {
 
       setTaskName('');
 
-      const { error } = await res.json();
-      if (error) {
-        console.log('replace with toast alert', error);
-        return;
+      notify({ state: 'success', message: 'Task successfully created' });
+
+      if (!res.ok) {
+        notify({ state: 'error', message: `Task couldn't be created. Please try again.` });
       }
 
       // mutate('/api/todos');
@@ -197,6 +198,7 @@ const Task = ({ collection, todo }) => {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [name, updateName] = useState('');
+  const { notify } = useToast();
   const { mutate } = useSWRConfig();
 
   return (
@@ -300,7 +302,9 @@ const Task = ({ collection, todo }) => {
                           },
                         })}
                         onClick={async () => {
-                          await fetcher(`/api/todo/${todo.id}`, { id: todo.id }, 'DELETE');
+                          await fetcher(`/api/todo/${todo.id}`, { id: todo.id }, 'DELETE').then(() => {
+                            notify({ state: 'success', message: 'Task successfully deleted' });
+                          });
                         }}
                       >
                         Yes, delete task
@@ -330,6 +334,7 @@ const Task = ({ collection, todo }) => {
                   aria-label="Close"
                   onClick={async () => {
                     // await fetcher(`/api/test`, { name: name, id: todo.id }, 'POST');
+                    notify({ state: 'success', message: 'Task successfully updated' });
                     await fetcher(`/api/todo/${todo.id}`, { name: name }, 'PUT');
                     await mutate('/api/todos');
                   }}
@@ -414,6 +419,7 @@ const CollectionDialog = ({ collection }) => {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [name, updateName] = useState(collection?.name);
+  const { notify } = useToast();
   const { mutate } = useSWRConfig();
   const router = useRouter();
 
@@ -513,6 +519,7 @@ const CollectionDialog = ({ collection }) => {
                       onClick={async () => {
                         await fetcher(`/api/collection/${collection.id}`, { id: collection.id }, 'DELETE').then(() => {
                           router.push('/app');
+                          notify({ state: 'success', message: 'Collection successfully deleted' });
                         });
                       }}
                     >
@@ -542,9 +549,8 @@ const CollectionDialog = ({ collection }) => {
               <button
                 aria-label="Close"
                 onClick={async () => {
-                  // await fetcher(`/api/test`, { name: name, id: collection.id }, 'POST');
+                  notify({ state: 'success', message: 'Collection successfully updated' });
                   await fetcher(`/api/collection/${collection.id}`, { name: name }, 'PUT');
-                  await mutate('/api/collections');
                 }}
                 className={button({
                   variant: 'brandOutline',
