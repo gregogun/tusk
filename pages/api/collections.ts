@@ -18,6 +18,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
         include: {
           todos: true,
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       })
       .catch((error) => error);
     res.status(200).json({ collections });
