@@ -1,8 +1,7 @@
 import prisma from '@/lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/react';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { id } = req.query;
 
   if (!id) {
@@ -17,6 +16,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         where: {
           collectionId: collectionId,
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       })
       .catch((error) => error);
     res.status(200).json({ todos });
@@ -24,3 +26,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json({ error: error.message || error.toString() });
   }
 }
+
+export default handler;
