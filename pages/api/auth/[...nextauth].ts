@@ -5,9 +5,6 @@ import TwitterProvider from 'next-auth/providers/twitter';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import { NextApiHandler } from 'next';
-import { getSession } from 'next-auth/react';
-import { JWT } from 'next-auth/jwt';
-import { redirect } from 'next/dist/server/api-utils';
 import { server } from 'config';
 
 const options: NextAuthOptions = {

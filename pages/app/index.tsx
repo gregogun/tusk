@@ -30,6 +30,7 @@ import { Collection, Todo } from '.prisma/client';
 import { blue } from '@radix-ui/colors';
 import { formatDistance, parseISO, parse } from 'date-fns';
 import { CircularProgress } from '@/components/circularProgress';
+import useToast from '@/utils/hooks/useToast';
 
 const ListItem = styled('li', {});
 
@@ -165,6 +166,7 @@ interface CollectionResponse {
 const CollectionsList = ({ session, status }: CollectionsListProps) => {
   const [collectionName, setCollectionName] = useState('');
   const [toastAlert, setToastAlert] = useState<ToastState>({ state: 'idle', message: '' });
+  const { notify } = useToast();
   const { data, error } = useSWR<CollectionResponse | undefined>('/api/collections', fetcherSWR);
   const { mutate } = useSWRConfig();
 
@@ -182,20 +184,24 @@ const CollectionsList = ({ session, status }: CollectionsListProps) => {
         method: 'POST',
       });
 
-      mutate('/api/collections');
-
-      const { error } = await res.json();
-      if (error) {
-        setToastAlert({ state: 'error', message: error });
+      if (!res.ok) {
+        notify({ state: 'error', message: error });
         return;
       }
 
-      setToastAlert({
+      setCollectionName('');
+
+      mutate('/api/collections');
+
+      notify({
         state: 'success',
         message: 'Collection successfully created!',
       });
     } else {
-      console.log('Please enter a name for your collection');
+      notify({
+        state: 'error',
+        message: 'Please enter a name for your collection',
+      });
     }
   }
 

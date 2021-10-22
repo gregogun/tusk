@@ -1,3 +1,5 @@
 node_modules
 coverage
 .next
+*.config.js
+_error.js
