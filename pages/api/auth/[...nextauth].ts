@@ -36,11 +36,6 @@ const options: NextAuthOptions = {
       }
       return token;
     },
-    async redirect({ url, baseUrl }) {
-      baseUrl = server;
-      url = `${server}/app`;
-      return url.startsWith(baseUrl) ? url : baseUrl;
-    },
     async session({ session, token, user }) {
       if (token) {
         session.userId = token.uid as number;

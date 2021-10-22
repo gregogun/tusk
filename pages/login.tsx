@@ -30,16 +30,7 @@ const Login: FC = () => {
   if (status === 'loading') {
     return <h1>Loading...</h1>;
   }
-  if (session) {
-    return (
-      <>
-        Signed in as {session.user?.email} <br />
-        <button type="button" onClick={() => signOut()}>
-          Sign out
-        </button>
-      </>
-    );
-  }
+
   return (
     <Box css={{ display: 'grid', placeItems: 'center', height: '90vh' }}>
       <Flex css={{ flexDirection: 'column', gap: '$6', height: '$8xl', alignItems: 'center' }}>
@@ -62,7 +53,11 @@ const Login: FC = () => {
                 css: { display: 'flex', alignItems: 'center', gap: '$4', mb: '$4' },
               })}
               type="button"
-              onClick={() => signIn(providers.twitter.id)}
+              onClick={() =>
+                signIn(providers.twitter.id, {
+                  callbackUrl: `${(window.location, origin)}/app`,
+                })
+              }
             >
               Sign In With Twitter
               <span>
@@ -78,7 +73,11 @@ const Login: FC = () => {
                 css: { display: 'flex', alignItems: 'center', gap: '$4' },
               })}
               type="button"
-              onClick={() => signIn(providers.github.id)}
+              onClick={() =>
+                signIn(providers.github.id, {
+                  callbackUrl: `${(window.location, origin)}/app`,
+                })
+              }
             >
               Sign In With Github
               <span>
