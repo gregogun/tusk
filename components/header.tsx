@@ -53,9 +53,6 @@ export const Header = ({ ...props }: HeaderProps) => {
   const { data: session, status } = useSession();
   const { css } = props;
 
-  // When rendering client side don't display anything until loading is complete
-  if (typeof window !== 'undefined' && status === 'loading') return null;
-
   return (
     <header
       className={header({
