@@ -5,7 +5,6 @@ import TwitterProvider from 'next-auth/providers/twitter';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import { NextApiHandler } from 'next';
-import { withSentry } from '@sentry/nextjs';
 import { server } from 'config';
 
 const options: NextAuthOptions = {
@@ -32,12 +31,7 @@ const options: NextAuthOptions = {
       if (user) {
         token.uid = user.id;
       }
-      return Promise.resolve(token);
-    },
-    async redirect({ url, baseUrl }) {
-      baseUrl = server;
-      url = `${server}/app`;
-      return url.startsWith(baseUrl) ? url : baseUrl;
+      return token;
     },
     async session({ session, token, user }) {
       if (token) {
@@ -50,8 +44,9 @@ const options: NextAuthOptions = {
     secret: process.env.SECRET,
     encryption: true,
   },
+  debug: true,
 };
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
 
-export default withSentry(authHandler);
+export default authHandler;
