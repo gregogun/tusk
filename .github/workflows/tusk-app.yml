@@ -1,0 +1,14 @@
+name: tusk
+on: push
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' # Only deploy main
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm ci
+      - name: Run production migration
+        run: npm run migrate:deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
