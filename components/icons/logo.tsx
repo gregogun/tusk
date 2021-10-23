@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { svg } from '@/styles/svg';
-import useMediaQuery from '@/utils/hooks/useMediaQuery';
 
 export const Logo = ({ ...props }) => {
   return (
