@@ -7,6 +7,24 @@ import { button } from '@/components/button';
 import { Github } from '@/components/icons/github';
 import { Twitter } from '@/components/icons/twitter';
 import { Logo } from '@/components/icons/logo';
+import Link from 'next/link';
+import { linkButton } from '@/components/link';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+
+const LogoLink = ({ children }) => {
+  return (
+    <Link href="/" passHref>
+      <a
+        className={linkButton({
+          variant: 'ghost',
+        })}
+      >
+        {children}
+        <VisuallyHidden.Root>Home</VisuallyHidden.Root>
+      </a>
+    </Link>
+  );
+};
 
 const Login: FC = () => {
   const [providers, setproviders] = useState<Record<
@@ -34,16 +52,13 @@ const Login: FC = () => {
   return (
     <Box css={{ display: 'grid', placeItems: 'center', height: '90vh' }}>
       <Flex css={{ flexDirection: 'column', gap: '$6', height: '$8xl', alignItems: 'center' }}>
-        <Logo
-          css={{
-            '@bp1': {
-              width: '64px',
-            },
-            '@bp2': {
+        <LogoLink>
+          <Logo
+            css={{
               width: '144px',
-            },
-          }}
-        />
+            }}
+          />
+        </LogoLink>
         <Box>
           {providers?.twitter && (
             <button
