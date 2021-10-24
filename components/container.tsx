@@ -1,16 +1,23 @@
 import Head from 'next/head';
 import { CSS, styled } from 'stitches.config';
+import { link } from './link';
+import { text } from './text';
 
 const Wrapper = styled('div', {
-  // '@bp1': {
-  //   padding: '$4',
-  // },
-  // '@bp2': {
-  //   padding: '$4 $8',
-  // },
   margin: '0 auto',
   width: '100%',
   position: 'relative',
+  height: '100vh',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+});
+
+const Footer = styled('footer', {
+  display: 'grid',
+  placeItems: 'center',
+  p: '$6',
 });
 
 interface ContainerProps {
@@ -57,6 +64,21 @@ export const Container = ({ ...props }: ContainerProps) => {
         <meta name="theme-color" content="#171717" />
       </Head>
       {children}
+      <Footer css={{ textAlign: 'center' }}>
+        <p className={text()}>
+          <a className={link()} href="https://github.com/gregogun/tusk">
+            Designed and built
+          </a>
+          {''} by {''}
+          <a className={link()} href="https://github.com/gregogun">
+            Greg Ogun.
+          </a>
+          {''} Powered by {''}
+          <a className={link()} href="https://nextjs.org/">
+            Next.js
+          </a>
+        </p>
+      </Footer>
     </Wrapper>
   );
 };
