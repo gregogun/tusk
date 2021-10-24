@@ -70,20 +70,20 @@ export default function Home() {
             <h1
               className={text({
                 size: {
-                  '@bp1': '2xl',
+                  '@bp1': '3xl',
                   '@bp2': '4xl',
                 },
                 weight: 'regular',
+                css: {
+                  mb: '$6',
+                },
               })}
             >
               a better way to manage your <span className={strikethrough()}>tusks</span> tasks
             </h1>
             <p
               className={text({
-                size: {
-                  '@bp1': 'xs',
-                  '@bp2': 'md',
-                },
+                size: 'md',
                 css: {
                   mb: '$8',
                 },
@@ -117,19 +117,18 @@ export default function Home() {
                   Get Started
                 </a>
               </Link>
-              <Link href="/" passHref>
-                <a
-                  className={button({
-                    variant: 'solid',
-                    css: {
-                      mr: '$4',
-                      maxHeight: '48px',
-                    },
-                  })}
-                >
-                  Learn More
-                </a>
-              </Link>
+              <a
+                href="https://github.com/gregogun/tusk"
+                className={button({
+                  variant: 'solid',
+                  css: {
+                    mr: '$4',
+                    maxHeight: '48px',
+                  },
+                })}
+              >
+                Learn More
+              </a>
             </Flex>
           </Box>
         </Main>
