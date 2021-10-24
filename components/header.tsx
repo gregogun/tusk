@@ -29,10 +29,10 @@ const header = css({
     padding: '$4',
   },
   '@bp2': {
-    padding: '$2 $8',
+    padding: '$2 $4',
   },
   width: '100%',
-  margin: 'auto',
+  margin: '0 auto',
   mb: '$6',
 });
 
@@ -58,7 +58,7 @@ export const Header = ({ ...props }: HeaderProps) => {
       className={header({
         css: {
           borderBottom: session ? '1px solid $colors$gray' : 'none',
-          pt: session ? '$2' : '$6',
+          // pt: session ? '$2' : '$6',
         },
       })}
     >
@@ -67,7 +67,7 @@ export const Header = ({ ...props }: HeaderProps) => {
           <Logo
             css={{
               '@bp1': {
-                width: '64px',
+                width: '96px',
               },
               '@bp2': {
                 width: '144px',

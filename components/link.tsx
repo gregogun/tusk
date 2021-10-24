@@ -7,13 +7,13 @@ export const link = css({
       line: {
         WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
         color: 'inherit',
-        boxShadow: '0px 1px 0px 0px $colors$gray',
+        boxShadow: '0px 1px 0px 0px $colors$lightGray',
         transition: 'all 200ms linear 0ms',
         fontWeight: 'bold',
         textDecoration: 'none',
 
         '&:hover': {
-          color: '$gray',
+          color: '$lightGray',
           transition: 'all 200ms linear 0ms',
         },
       },

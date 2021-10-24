@@ -30,7 +30,6 @@ import { Collection, Todo } from '.prisma/client';
 import { blue } from '@radix-ui/colors';
 import { formatDistance, parseISO, parse } from 'date-fns';
 import { CircularProgress } from '@/components/circularProgress';
-import useToast from '@/utils/hooks/useToast';
 
 const ListItem = styled('li', {});
 
@@ -166,7 +165,6 @@ interface CollectionResponse {
 const CollectionsList = ({ session, status }: CollectionsListProps) => {
   const [collectionName, setCollectionName] = useState('');
   const [toastAlert, setToastAlert] = useState<ToastState>({ state: 'idle', message: '' });
-  const { notify } = useToast();
   const { data, error } = useSWR<CollectionResponse | undefined>('/api/collections', fetcherSWR);
   const { mutate } = useSWRConfig();
 
@@ -184,24 +182,20 @@ const CollectionsList = ({ session, status }: CollectionsListProps) => {
         method: 'POST',
       });
 
-      if (!res.ok) {
-        notify({ state: 'error', message: error });
+      mutate('/api/collections');
+
+      const { error } = await res.json();
+      if (error) {
+        setToastAlert({ state: 'error', message: error });
         return;
       }
 
-      setCollectionName('');
-
-      mutate('/api/collections');
-
-      notify({
+      setToastAlert({
         state: 'success',
         message: 'Collection successfully created!',
       });
     } else {
-      notify({
-        state: 'error',
-        message: 'Please enter a name for your collection',
-      });
+      console.log('Please enter a name for your collection');
     }
   }
 
@@ -345,9 +339,18 @@ export default function App(/* {collections  }: AppProps */) {
       />
       <Main
         css={{
+          '@bp1': {
+            minWidth: '350px',
+          },
+          '@bp2': {
+            minWidth: '768px',
+          },
+          '@bp3': {
+            minWidth: '768px',
+          },
           w: '100%',
           maxWidth: '768px',
-          m: 'auto',
+          marginBottom: 'auto',
         }}
       >
         <CollectionsList session={session} status={status} />
