@@ -4,7 +4,7 @@
 
 ---
 
-A lightweight task application, with a strong focus on user experience. Written in Typescript. Built with Next.js. Persisted in PostgresQL via Prisma. Styled with Radix UI and Stitches.js. Tested with Jest, Testing Library and Cypress.
+Tusk is a lightweight task application, with a strong focus on user experience. Written in Typescript. Built with Next.js. Persisted in PostgresQL via Prisma. Styled with Radix UI and Stitches.js. Tested with Jest, Testing Library and Cypress.
 
 ## Features
 
