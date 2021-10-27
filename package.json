@@ -6,16 +6,21 @@
     "Next",
     "Typescript"
   ],
-  "author": "Leonardo Roese",
+  "author": "Greg Ogun",
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
+    "lint": "next lint --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "prepare": "husky install",
+    "check-types": "tsc --pretty --noEmit",
+    "check-format": "prettier --check",
+    "check-lint": "eslint . --ext ts --ext tsx --ext js",
+    "format": "prettier --write",
     "migrate:deploy": "prisma migrate deploy"
   },
   "dependencies": {
@@ -82,5 +87,12 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "ts-node": "ts-node --compiler-options '{\"module\":\"CommonJS\"}'"
+  "ts-node": "ts-node --compiler-options '{\"module\":\"CommonJS\"}'",
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "npm run lint",
+      "npm run check-lint",
+      "npm run format"
+    ]
+  }
 }
