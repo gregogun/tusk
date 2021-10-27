@@ -1,7 +1,7 @@
 // helloWorld.test.tsx
 import React from 'react';
 import { render } from '@testing-library/react';
-import HelloWorld from 'components/hello-world';
+import HelloWorld from '@/components/test/hello-world';
 
 test('renders a message', () => {
   const { container, getByText } = render(<HelloWorld />);
