@@ -90,7 +90,6 @@
   "ts-node": "ts-node --compiler-options '{\"module\":\"CommonJS\"}'",
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
-      "npm run lint",
       "npm run check-lint",
       "npm run format"
     ]
