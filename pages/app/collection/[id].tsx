@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container } from '@/components/container';
 import { Header } from '@/components/header';
-import { Button, button } from '@/components/button';
+import { button } from '@/components/button';
 import { Box, Flex, Main } from '@/components/layout';
 import { text } from '@/components/text';
 import { Plus } from '@/components/icons/plus';
@@ -14,30 +14,22 @@ import { Trash } from '@/components/icons/trash';
 import { Collection, Todo } from '.prisma/client';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
-import { CreateTodoPayload, getCollection } from '@/lib/prisma';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  itemStyles,
-} from '@/components/dropdown';
+import { getCollection } from '@/lib/prisma';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown';
 import { EllipsisVertical } from '@/components/icons/ellipsis_vertical';
 import {
-  AlertDialog,
+  AlertDialogWrapper,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/alertDialog';
 import { Pencil } from '@/components/icons/pencil';
 import { green, red } from '@radix-ui/colors';
 import { Session } from 'next-auth';
-import { route } from 'next/dist/server/router';
 import { useRouter } from 'next/router';
-import useSWR, { mutate, useSWRConfig } from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import { fetcher, fetcherSWR } from '@/lib/fetcher';
 import {
   DialogClose,
@@ -47,13 +39,12 @@ import {
   DialogInput,
   DialogLabel,
   DialogTitle,
-  DialogTrigger,
   DialogWrapper,
 } from '@/components/dialog';
-import { CheckIcon, ChevronLeftIcon, Cross2Icon, DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { svg } from '@/styles/svg';
-import Link from 'next/link';
 import useToast from '@/utils/hooks/useToast';
+import { CollectionDialog } from '@/components/collectionDialog';
 
 // <-----------------------------Add Task----------------------------->
 
@@ -62,7 +53,7 @@ interface AddTaskProps {
   session: Session;
 }
 
-const AddTask = ({ session, collection }: AddTaskProps) => {
+const AddTask = ({ collection }: AddTaskProps) => {
   const [taskName, setTaskName] = useState<string>('');
   const { notify } = useToast();
 
@@ -194,7 +185,7 @@ const Checkbox = ({ todo }: CheckboxProps) => {
   );
 };
 
-const Task = ({ collection, todo }) => {
+const Task = ({ todo }) => {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [name, updateName] = useState('');
@@ -280,7 +271,7 @@ const Task = ({ collection, todo }) => {
               </span>
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-              <AlertDialog open={deleteOpen} onOpenChange={() => setDeleteOpen(!deleteOpen)}>
+              <AlertDialogWrapper open={deleteOpen} onOpenChange={() => setDeleteOpen(!deleteOpen)}>
                 <AlertDialogContent>
                   <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                   <AlertDialogDescription>
@@ -312,7 +303,7 @@ const Task = ({ collection, todo }) => {
                     </AlertDialogAction>
                   </Flex>
                 </AlertDialogContent>
-              </AlertDialog>
+              </AlertDialogWrapper>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -385,211 +376,30 @@ const Task = ({ collection, todo }) => {
 const ListItem = styled('li', {});
 
 interface TaskListProps {
-  collection: Collection;
   todos: Todo[];
 }
 
-const CompleteTasks = ({ collection, todos }: TaskListProps) => {
+const CompleteTasks = ({ todos }: TaskListProps) => {
   return (
     <ul>
       {todos
         ?.filter((todo) => todo.completed)
         .map((completeTodo) => (
-          <Task key={completeTodo.id} todo={completeTodo} collection={collection} />
+          <Task key={completeTodo.id} todo={completeTodo} />
         ))}
     </ul>
   );
 };
 
-const IncompleteTasks = ({ collection, todos }: TaskListProps) => {
+const IncompleteTasks = ({ todos }: TaskListProps) => {
   return (
     <ul>
       {todos
         ?.filter((todo) => !todo.completed)
         .map((incompleteTodo) => (
-          <Task key={incompleteTodo.id} todo={incompleteTodo} collection={collection} />
+          <Task key={incompleteTodo.id} todo={incompleteTodo} />
         ))}
     </ul>
-  );
-};
-
-// <-----------------------Collection----------------------------->
-
-const CollectionDialog = ({ collection }) => {
-  const [editOpen, setEditOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [name, updateName] = useState(collection?.name);
-  const { notify } = useToast();
-  const { mutate } = useSWRConfig();
-  const router = useRouter();
-
-  return (
-    <Flex css={{ mb: '$6', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Flex css={{ alignItems: 'center' }}>
-        <Link href="/app" passHref>
-          <a
-            className={button({
-              size: 'icon',
-              css: {
-                padding: '$2 $2',
-                mr: '$4',
-                backgroundColor: '$darkGray',
-                '&:hover': {
-                  backgroundColor: '$gray',
-                },
-              },
-            })}
-          >
-            <ChevronLeftIcon aria-label="Back to collections" className={svg({ css: { boxSize: '$2xl' } })} />
-          </a>
-        </Link>
-        <h1 className={text({ size: '2xl', weight: 'bold' })}>{name}</h1>
-      </Flex>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
-            className={button({
-              variant: 'ghost',
-              size: 'icon',
-            })}
-          >
-            <DotsHorizontalIcon className={svg({ css: { boxSize: '$lg' } })} />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem
-            role="button"
-            onSelect={(e) => e.preventDefault()}
-            onClick={() => setEditOpen(!editOpen)}
-            css={{
-              padding: '$3',
-              borderRadius: '$md $md 0 0',
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}
-          >
-            Edit{' '}
-            <span>
-              <Pencil css={{ boxSize: '$md' }} />
-            </span>
-          </DropdownMenuItem>
-          {/* <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            DIALOG GOES BACK IN HERE
-          </DropdownMenuItem> */}
-          <DropdownMenuItem
-            role="button"
-            onClick={() => setDeleteOpen(!deleteOpen)}
-            css={{
-              padding: '$3',
-              borderRadius: '0 0 $md $md',
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}
-            onSelect={(e) => e.preventDefault()}
-          >
-            Delete
-            <span>
-              <Trash css={{ boxSize: '$md' }} />
-            </span>
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <AlertDialog open={deleteOpen} onOpenChange={() => setDeleteOpen(!deleteOpen)}>
-              <AlertDialogContent>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete this collection and{' '}
-                  <span className={text({ weight: 'bold', css: { color: '$white' } })}>all of its tasks</span>.
-                </AlertDialogDescription>
-                <Flex css={{ justifyContent: 'center', gap: '$4' }}>
-                  <AlertDialogCancel asChild>
-                    <button className={button({ variant: 'outline' })}>Cancel</button>
-                  </AlertDialogCancel>
-                  <AlertDialogAction asChild>
-                    <button
-                      className={button({
-                        variant: 'solid',
-                        css: {
-                          backgroundColor: red.red3,
-                          color: red.red11,
-                          '&:hover': { backgroundColor: red.red5 },
-                        },
-                      })}
-                      onClick={async () => {
-                        await fetcher(`/api/collection/${collection.id}`, { id: collection.id }, 'DELETE').then(() => {
-                          router.push('/app');
-                          notify({ state: 'success', message: 'Collection successfully deleted' });
-                        });
-                      }}
-                    >
-                      Yes, delete task
-                    </button>
-                  </AlertDialogAction>
-                </Flex>
-              </AlertDialogContent>
-            </AlertDialog>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <DialogWrapper open={editOpen} onOpenChange={() => setEditOpen(!editOpen)}>
-        <DialogContent>
-          <DialogTitle asChild>
-            <h2>Edit Task</h2>
-          </DialogTitle>
-          <DialogDescription asChild>
-            <p>Rename your task and hit the save button below to save changes.</p>
-          </DialogDescription>
-          <DialogFieldset>
-            <DialogLabel htmlFor="collection">Name</DialogLabel>
-            <DialogInput onChange={(e) => updateName(e.target.value)} id="collection" placeholder="My Collection" />
-          </DialogFieldset>
-          <Flex css={{ marginTop: 25, justifyContent: 'flex-end' }}>
-            <DialogClose asChild>
-              <button
-                aria-label="Close"
-                onClick={async () => {
-                  notify({ state: 'success', message: 'Collection successfully updated' });
-                  await fetcher(`/api/collection/${collection.id}`, { name: name }, 'PUT');
-                }}
-                className={button({
-                  variant: 'brandOutline',
-                  size: 'md',
-                  css: { mr: '$4', backgroundColor: '$darkGray' },
-                })}
-              >
-                Save
-              </button>
-            </DialogClose>
-            <DialogClose asChild>
-              <button aria-label="Close" className={button({ variant: 'outline', size: 'md', css: {} })}>
-                Cancel
-              </button>
-            </DialogClose>
-          </Flex>
-          <DialogClose asChild>
-            <button
-              className={button({
-                size: 'icon',
-                css: {
-                  position: 'absolute',
-                  top: 20,
-                  right: 20,
-                },
-              })}
-            >
-              <Cross2Icon
-                className={svg({
-                  css: {
-                    boxSize: '$lg',
-                  },
-                })}
-              />
-            </button>
-          </DialogClose>
-        </DialogContent>
-      </DialogWrapper>
-    </Flex>
   );
 };
 
@@ -604,9 +414,9 @@ interface TodoResponse {
   todos?: Todo[];
 }
 
-export default function TodoCollection({ todos, collection }: CollectionProps) {
+export default function TodoCollection({ collection }: CollectionProps) {
   const { data: session, status } = useSession();
-  const { data, error } = useSWR<TodoResponse | undefined>(`/api/todos/${collection.id}`, fetcherSWR, {
+  const { data } = useSWR<TodoResponse | undefined>(`/api/todos/${collection.id}`, fetcherSWR, {
     refreshInterval: 1000,
   });
   const router = useRouter();
@@ -640,11 +450,11 @@ export default function TodoCollection({ todos, collection }: CollectionProps) {
           Tasks - {data?.todos?.filter((todo) => !todo.completed).length}
         </h2>
         <AddTask session={session} collection={collection} />
-        <IncompleteTasks collection={collection} todos={data?.todos} />
+        <IncompleteTasks todos={data?.todos} />
         <h2 className={text({ size: 'xl', css: { mb: '$4' } })}>
           Completed - {data?.todos?.filter((todo) => todo.completed).length}
         </h2>
-        <CompleteTasks collection={collection} todos={data?.todos} />
+        <CompleteTasks todos={data?.todos} />
       </Main>
     </Container>
   );
