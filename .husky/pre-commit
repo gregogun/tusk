@@ -3,12 +3,5 @@
 
 echo 'Styling, testing and building your project before comitting 💅🔨'
 
-# run ts checks
-yarn check-types || 
-(
-    echo `Failed Type check ❌`
-    false;
-)
-
 # run lint staged
 yarn lint-staged

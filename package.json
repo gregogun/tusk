@@ -12,7 +12,7 @@
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --fix",
+    "lint": "eslint --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -90,7 +90,6 @@
   "ts-node": "ts-node --compiler-options '{\"module\":\"CommonJS\"}'",
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
-      "npm run check-lint",
       "npm run format"
     ]
   }
