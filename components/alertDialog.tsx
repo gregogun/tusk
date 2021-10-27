@@ -66,7 +66,7 @@ const StyledDescription = styled(AlertDialogPrimitive.Description, {
 });
 
 // Exports
-export const AlertDialog = AlertDialogPrimitive.Root;
+export const AlertDialogWrapper = AlertDialogPrimitive.Root;
 export const AlertDialogTrigger = AlertDialogPrimitive.Trigger;
 export const AlertDialogContent = StyledContent;
 export const AlertDialogTitle = StyledTitle;
