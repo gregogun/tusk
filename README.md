@@ -1,6 +1,6 @@
 # Tusk
 
-[![Image from Gyazo](https://i.gyazo.com/5f36ae4ab5d7dc8de7d0d29c0ba35f06.gif)](https://gyazo.com/5f36ae4ab5d7dc8de7d0d29c0ba35f06)
+![tusk demo shorter](https://user-images.githubusercontent.com/65421744/141385728-2dbe4f45-36e5-423a-a670-581e73c89eae.gif)
 
 ---
 
