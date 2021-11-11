@@ -438,11 +438,17 @@ export default function TodoCollection({ collection }: CollectionProps) {
       <Main
         css={{
           '@bp1': {
-            p: '$4',
+            minWidth: '350px',
+          },
+          '@bp2': {
+            minWidth: '768px',
+          },
+          '@bp3': {
+            minWidth: '768px',
           },
           w: '100%',
           maxWidth: '768px',
-          m: 'auto',
+          marginBottom: 'auto',
         }}
       >
         <CollectionDialog collection={collection} />
