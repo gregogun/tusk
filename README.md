@@ -23,6 +23,26 @@ Tusk is a lightweight task application, with a strong focus on user experience. 
 * Boosted performance
 * Custom theming
 
+## Tooling
+
+- Language: [Typescript](https://www.typescriptlang.org/)
+
+- Framework: [Next.js](https://nextjs.org/)
+
+- Styling: [Stitches.js](https://stitches.dev/) + [Radix UI](https://www.radix-ui.com/)
+
+- Database: [PostgresQL](https://www.postgresql.org/)
+
+- ORM: [Prisma](https://www.prisma.io/)
+
+- Authentication: [NextAuth](https://next-auth.js.org/)
+
+- Additional Tooling: [SWR](https://swr.vercel.app/), [Prettier](https://prettier.io/), [ESLint](https://eslint.org/)
+
+- Testing: [Jest](https://jestjs.io/) & [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+
+- CI/CD: [Github Actions](https://github.com/features/actions)
+
 ## Running the project locally
 
 - Clone the project locally
@@ -41,6 +61,10 @@ npm install
 yarn 
 ```
 
+- Create a `.env` file similar to `.env.example`, and ensure it is in `.gitignore`. 
+
+- Add your secrets and tokens for auth and database if necessary. 
+
 - Fire up the development server by running:
 
 ```
@@ -51,43 +75,9 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000/) to view it in the browser.
 
-## Dependencies
-
-- [React](https://reactjs.org/)
-
-- [React-DOM](https://www.npmjs.com/package/react-dom)
-
-- [Typescript](https://www.typescriptlang.org/)
-
-- [Stitches](https://stitches.dev/)
-
-- [Radix UI](https://www.radix-ui.com/)
-
-- [Prisma](https://www.prisma.io/)
-
-- [SWR](https://swr.vercel.app/)
-
-- [NextAuth](https://next-auth.js.org/)
-
-- [Prettier](https://prettier.io/)
-
-- [ESLint](https://eslint.org/)
-
-- [Jest](https://jestjs.io/)
-
-- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
-
-- [Cypress](https://www.cypress.io/)
-
-- [Github Actions](https://github.com/features/actions)
-
- 
-
 ## Want to get involved?
 
 Have an idea for a feature or enhancement? Submit a pr and I'll get back to you soon as I can. 
-
-Check out our contributing guide for info on how to contribute to the project.
 
 ## Deploy on Vercel
 
